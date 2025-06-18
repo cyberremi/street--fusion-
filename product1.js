@@ -8,3 +8,6 @@ window.addEventListener('scroll', () => {
       text.classList.remove('centered');
     }
   });
+  
+  // now stuf
+  

@@ -455,3 +455,35 @@ margin-bottom: 10px;
   }
   
 }
+/* new code */
+ul#cart-items {
+  list-style: none;
+  padding: 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+ul#cart-items li {
+  padding: 10px;
+  background: #1e1e1e;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+#mini-cart.shrunk {
+  width: 50px !important;
+  height: 50px !important;
+  overflow: hidden;
+  padding: 0 !important;
+  font-size: 1.5rem !important;
+  justify-content: center !important;
+}
+
+#mini-cart button {
+  background: #444;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
