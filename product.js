@@ -1,4 +1,189 @@
+
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+const cartItemsList = document.getElementById("cart-items");
+const cartTotal = document.getElementById("cart-total");
+const cartCount = document.getElementById("cart-count");
+
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function updateCartUI() {
+  if (cartItemsList) cartItemsList.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      ${item.name} - ₦${item.price} x ${item.quantity}
+      <button onclick="changeQuantity(${index}, -1)">-</button>
+      <button onclick="changeQuantity(${index}, 1)">+</button>
+      <button onclick="removeFromCart(${index})">Remove</button>
+    `;
+    if (cartItemsList) cartItemsList.appendChild(li);
+
+    total += item.price * item.quantity;
+  });
+
+  if (cartTotal) cartTotal.textContent = total.toFixed(2);
+  if (cartCount) cartCount.textContent = cart.length;
+  saveCart();
+}
+
+function addToCart(product) {
+  const existing = cart.find((item) => item.id === product.id);
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({ ...product, quantity: 1 });
+  }
+  updateCartUI();
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartUI();
+}
+
+function changeQuantity(index, delta) {
+  cart[index].quantity += delta;
+  if (cart[index].quantity <= 0) {
+    removeFromCart(index);
+  } else {
+    updateCartUI();
+  }
+}
+
+document.querySelectorAll(".add-to-cart").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const parent = btn.closest(".product-card");
+    const product = {
+      id: parent.dataset.id,
+      name: parent.dataset.name,
+      price: parseFloat(parent.dataset.price),
+    };
+    addToCart(product);
+    alert(`${product.name} added to cart!`);
+  });
+});
+
+document.getElementById("checkout-whatsapp")?.addEventListener("click", () => {
+  if (cart.length === 0) return alert("Cart is empty");
+
+  let message = "🛍 *Street Fashion Order:*\n";
+  cart.forEach(item => {
+    message += `- ${item.name} x ${item.quantity} = ₦${item.price * item.quantity}\n`;
+  });
+  const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+  message += `\n*Total: ₦${total.toFixed(2)}*`;
+
+  const phoneNumber = "2349012008514";
+  const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank");
+});
+
+document.getElementById("checkout-email")?.addEventListener("click", () => {
+  if (cart.length === 0) return alert("Cart is empty");
+
+  const message = cart.map(item =>
+    `${item.name} x ${item.quantity} = ₦${item.price * item.quantity}`
+  ).join("\n");
+
+  const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+  emailjs.send("your_service_id", "your_template_id", {
+    cart_message: `${message}\nTotal: ₦${total.toFixed(2)}`
+  }).then(() => {
+    alert("Order sent via email successfully!");
+  }, (error) => {
+    alert("Email failed: " + error.text);
+  });
+});
+
+window.onload = updateCartUI;
+
+
+// new code
+
+  const miniCart = document.getElementById("mini-cart");
+const miniCount = document.getElementById("mini-count");
+const btnShrink = document.getElementById("toggle-shrink");
+const btnExpand = document.getElementById("expand-cart");
+const btnViewCart = document.getElementById("view-full-cart");
+
+// Update mini cart count from localStorage cart
+function updateMiniCartCount() {
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  miniCount.textContent = totalCount;
+  updateMiniCartCount();
+
+}
+
+// Draggable mini cart
+miniCart.onmousedown = function (e) {
+  if(e.target.tagName === "BUTTON") return; // Don't drag if clicking button
+  e.preventDefault();
+  let shiftX = e.clientX - miniCart.getBoundingClientRect().left;
+  let shiftY = e.clientY - miniCart.getBoundingClientRect().top;
+
+  function moveAt(pageX, pageY) {
+    miniCart.style.left = pageX - shiftX + 'px';
+    miniCart.style.top = pageY - shiftY + 'px';
+    miniCart.style.bottom = 'auto';
+    miniCart.style.right = 'auto';
+  }
+
+  function onMouseMove(e) {
+    moveAt(e.pageX, e.pageY);
+  }
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.onmouseup = () => {
+    document.removeEventListener('mousemove', onMouseMove);
+    miniCart.onmouseup = null;
+    updateMiniCartCount();
+
+  };
+};
+miniCart.ondragstart = () => false;
+
+// Toggle shrink/expand
+btnShrink.addEventListener("click", () => {
+  miniCart.classList.add("shrunk");
+  btnShrink.style.display = "none";
+  btnExpand.style.display = "inline-block";
+  updateMiniCartCount();
+
+});
+
+btnExpand.addEventListener("click", () => {
+  miniCart.classList.remove("shrunk");
+  btnExpand.style.display = "none";
+  btnShrink.style.display = "inline-block";
+  updateMiniCartCount();
+
+});
+
+// Open full cart page
+btnViewCart.addEventListener("click", () => {
+  window.location.href = "cart.html";
+  updateMiniCartCount();
+
+   // change if your cart page has a different name/path
+});
+
+// Initialize mini cart count on page load
+window.addEventListener("load", updateMiniCartCount);
+
+// Also update mini cart count every time cart changes (you should call updateMiniCartCount() after cart update)
+
+
+
+
+
+/*let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
 const cartItemsList = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
@@ -98,4 +283,4 @@ document.getElementById("checkout-email").addEventListener("click", () => {
 });
 
 // Initialize cart UI
-updateCartUI();
+updateCartUI();   */

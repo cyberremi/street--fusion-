@@ -347,6 +347,60 @@ header h1 {
 .h3{
   text-align: center;
 }
+#cart {
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  width: 300px;
+  background-color: #1c1c1c;
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.cart-container h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+#cart-items {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-left: 0;
+  margin-bottom: 20px;
+  list-style: none;
+}
+
+#cart-items li {
+  border-bottom: 1px solid #333;
+  padding: 10px 0;
+}
+
+#cart-total {
+  font-weight: bold;
+}
+
+#checkout-whatsapp,
+#view-full-cart {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  background: #00aaff;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#checkout-whatsapp:hover,
+#view-full-cart:hover {
+  background: #008fcc;
+}
 
 /* === Text Effects === */
 .scroll-text {
@@ -434,6 +488,7 @@ right: 90px;
 margin-bottom: 40px;
 
   }
+
 .spo4 {
   display: none;
 }
@@ -442,6 +497,15 @@ margin-bottom: 40px;
   }
   .cart{
     display: none;
+  }
+  .cont{
+    display: block;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  #cart{
+  flex-direction: column;
+  position: relative;
   }
   .heading button{
 display: none;
@@ -452,5 +516,22 @@ display: none;
     left: 20px;
     top: -110px;
     z-index: -999999;
+  }
+  @media (max-width: 370px) {
+     
+    .nav {
+width: 12px;
+position: relative;
+
+    }
+    .cart{
+      display: none;
+    }
+.shop3 {
+  display: none;
+}
+.p4 {
+  font-size: 2px;
+}
   }
 }

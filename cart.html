@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Street Fusion - Cart</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #1f1f1f;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.7);
+    }
+    h1 {
+      text-align: center;
+      color: #00ccff;
+    }
+    ul#cart-items {
+      list-style: none;
+      padding: 0;
+      margin-top: 1rem;
+    }
+    #cart-items li {
+      background: #2a2a2a;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .total {
+      text-align: right;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 0.8rem 1.5rem;
+      background: #00ccff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px 0;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #009ecb;
+    }
+    /* Mini Cart Styles */
+    #mini-cart {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #222;
+      color: white;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: move;
+      z-index: 9999;
+      width: 200px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      user-select: none;
+    }
+    #mini-cart.shrunk {
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+      padding: 0;
+      font-size: 1.5rem;
+      justify-content: center;
+    }
+    #mini-cart span {
+      flex-grow: 1;
+      font-weight: bold;
+      text-align: center;
+    }
+    #mini-cart button {
+      background: #444;
+      padding: 5px 8px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your Cart</h1>
+    <ul id="cart-items"></ul>
+    <div class="total">Total: ₦<span id="cart-total">0.00</span></div>
+    <div class="actions">
+      <button onclick="continueShopping()">Continue Shopping</button>
+      <button onclick="checkoutWhatsApp()">Checkout via WhatsApp</button>
+    </div>
+  </div>
+
+  <!-- Mini Cart -->
+  <div id="mini-cart">
+    🛒 <span id="mini-count">0</span>
+    <button id="toggle-shrink">Shrink</button>
+    <button id="expand-cart" style="display:none;">Expand</button>
+    <button onclick="window.location.href='cart.html'">View Cart</button>
+  </div>
+
+<script>
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  const cartItemsList = document.getElementById("cart-items");
+  const cartTotal = document.getElementById("cart-total");
+  const miniCount = document.getElementById("mini-count");
+  const miniCart = document.getElementById("mini-cart");
+  const btnShrink = document.getElementById("toggle-shrink");
+  const btnExpand = document.getElementById("expand-cart");
+
+  function updateCartUI() {
+    cartItemsList.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+      cartItemsList.innerHTML = "<li>Your cart is empty.</li>";
+    }
+
+    cart.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div><strong>${item.name}</strong><br>₦${item.price} × ${item.quantity}</div>
+        <div>
+          <button onclick="changeQuantity(${index}, -1)">-</button>
+          <button onclick="changeQuantity(${index}, 1)">+</button>
+          <button onclick="removeFromCart(${index})">Remove</button>
+        </div>
+      `;
+      cartItemsList.appendChild(li);
+      total += item.price * item.quantity;
+    });
+
+    cartTotal.textContent = total.toFixed(2);
+    miniCount.textContent = cart.reduce((sum, i) => sum + i.quantity, 0);
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  function changeQuantity(index, delta) {
+    cart[index].quantity += delta;
+    if (cart[index].quantity <= 0) {
+      cart.splice(index, 1);
+    }
+    updateCartUI();
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartUI();
+  }
+
+  function continueShopping() {
+    window.location.href = "store.html";
+  }
+
+  function checkoutWhatsApp() {
+    if (cart.length === 0) return alert("Your cart is empty.");
+    let message = "🛍 *Street Fashion Order:*\n";
+    cart.forEach(item => {
+      message += `- ${item.name} x ${item.quantity} = ₦${item.price * item.quantity}\n`;
+    });
+    const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    message += `\n*Total: ₦${total.toFixed(2)}*`;
+
+    const phoneNumber = "2349012008514";
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  }
+
+  // Draggable Mini Cart
+  miniCart.onmousedown = function (e) {
+    if(e.target.tagName === "BUTTON") return; // Don't drag if clicking a button
+    e.preventDefault();
+    let shiftX = e.clientX - miniCart.getBoundingClientRect().left;
+    let shiftY = e.clientY - miniCart.getBoundingClientRect().top;
+
+    function moveAt(pageX, pageY) {
+      miniCart.style.left = pageX - shiftX + 'px';
+      miniCart.style.top = pageY - shiftY + 'px';
+      miniCart.style.bottom = 'auto';
+      miniCart.style.right = 'auto';
+    }
+
+    function onMouseMove(e) {
+      moveAt(e.pageX, e.pageY);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.onmouseup = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      miniCart.onmouseup = null;
+    };
+  };
+  miniCart.ondragstart = () => false;
+
+  // Toggle Shrink and Expand
+  btnShrink.addEventListener("click", () => {
+    miniCart.classList.add("shrunk");
+    btnShrink.style.display = "none";
+    btnExpand.style.display = "inline-block";
+  });
+
+  btnExpand.addEventListener("click", () => {
+    miniCart.classList.remove("shrunk");
+    btnExpand.style.display = "none";
+    btnShrink.style.display = "inline-block";
+  });
+
+  // Init
+  window.onload = updateCartUI;
+</script>
+</body>
+</html>

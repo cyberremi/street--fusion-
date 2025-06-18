@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us – Street Fusion</title>
+  <meta name="description" content="Street Fusion is a Nigerian street wear brand inspired by youth culture, street style, and global creativity. Learn more about our mission and vibe.">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function () {
+      emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // Replace with your EmailJS public key
+    })();
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #111, #222);
+      color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    button {
+        background-color: black;
+        color: white;
+        padding: 10px;
+        border-radius: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 50px auto;
+      background: #1c1c1c;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+    h1, h2 {
+      color: #fff;
+      text-align: center;
+    }
+    p {
+      line-height: 1.8;
+    }
+    ul {
+      list-style-type: square;
+      padding-left: 20px;
+    }
+    a {
+      color: #00aaff;
+      text-decoration: none;
+    }
+    .social-links {
+      text-align: center;
+      margin-top: 20px;
+    }
+    form {
+      margin-top: 40px;
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input, textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #00aaff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #008fcc;
+    }
+  </style>
+</head>
+<body>
+    <button onclick="location.href='store.html'">shop now</button>
+  <div class="container">
+    <h1>About Street Fusion</h1>
+    <p><strong>Street Fusion</strong> is a bold expression of culture, creativity, and identity. Born from the vibrant streets of Nigeria and inspired by global fashion trends, Street Fusion is more than just apparel — it’s a lifestyle.</p>
+
+    <p>We create <strong>high-quality urban wear</strong> that speaks to the modern generation — people who want to stand out, tell their story, and wear their vibe.</p>
+
+    <h2>What We Offer</h2>
+    <ul>
+      <li>Custom-designed T-shirts, hoodies, and accessories</li>
+      <li>Limited drops & exclusive collections</li>
+      <li>Global shipping (where available)</li>
+    </ul>
+
+    <h2>Connect With Us</h2>
+    <div class="social-links">
+      📸 <a href="https://www.instagram.com/streetfusionwear" target="_blank">@streetfusionwear</a><br>
+      📧 <a href="mailto:support@streetfusion.net">support@streetfusion.net</a>
+    </div>
+
+    <h2>Contact Us</h2>
+    <form id="contact-form">
+      <input type="text" name="from_name" placeholder="Your Name" required />
+      <input type="email" name="reply_to" placeholder="Your Email" required />
+      <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById("contact-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+        .then(() => alert("Message sent!"), (error) => alert("Error: " + error.text));
+    });
+  </script>
+</body>
+</html>
