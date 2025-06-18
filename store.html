@@ -20,14 +20,14 @@
         <h1>Street Fusion</h1>
         <p></p>
         <img src="logo.png" alt="Street Fusion Logo" class="logo" />
-        <nav>
+        <nav class="nav">
             <ul>
                 
                 <li><a href="look-book.html" class="link">Look Book<a></li><li><a href="index.html"class="link">Home</a></li>
             </ul>
         </nav>
        
-        <a href="store.html"><div class="cart"><img src="shopping icon.png" alt="shopping-logo" class="cart-logo"></div></a>
+        <a href="cart.html"><div class="cart"><img src="shopping icon.png" alt="shopping-logo" class="cart-logo"></div></a>
           
       </header>
       <div class="intro">
@@ -178,10 +178,121 @@
 
 <!-- Cart Section -->
 <div id="cart">
-  <h2>Your Cart</h2>
-  <ul id="cart-items"></ul>
-  <p>Total: ₦<span id="cart-total">0</span></p>
-  <button id="checkout-whatsapp">Order via WhatsApp</button>
+  <div class="cart-container">
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <p>Total: ₦<span id="cart-total">0</span></p>
+    <button id="checkout-whatsapp">Order via WhatsApp</button>
+    <button id="view-full-cart">View Full Cart</button>
+  </div>
+  <script>
+  document.getElementById("view-full-cart").addEventListener("click", function () {
+    window.location.href = "cart.html"; // Replace with your actual cart page URL
+  });
+</script>
+<div id="mini-cart" style="position: fixed; bottom: 20px; right: 20px; background: #222; color: white; padding: 10px; border-radius: 8px; cursor: move;">
+  🛒<button onclick="shrinkMiniCart()">🛑 Shrink Cart</button>
+
+<!-- Button to expand mini cart -->
+<button onclick="expandMiniCart()">✅ Expand Cart</button>
+  
+<button onclick="window.location='cart.html'">View Cart</button>
+<style>
+#cart {
+  transition: all 0.3s ease;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #222;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  z-index: 9999;
+  width: 250px;
+}
+
+#cart.shrunk {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+</style>
+</div>
+
+
+<script>
+  
+function shrinkMiniCart() {
+  const miniCart = document.getElementById("cart");
+  miniCart.classList.add("shrunk");
+}
+
+function expandMiniCart() {
+  const miniCart = document.getElementById("cart");
+  miniCart.classList.remove("shrunk");
+}
+
+
+  window.addEventListener("DOMContentLoaded", () => {
+  // your toggle button event listeners here
+});
+const btnShrink = document.getElementById("toggle-shrink");
+const btnExpand = document.getElementById("expand-cart");
+
+
+btnShrink.addEventListener("click", () => {
+  miniCart.classList.add("shrunk");
+  btnShrink.style.display = "none";
+  btnExpand.style.display = "inline-block";
+});
+
+btnExpand.addEventListener("click", () => {
+  miniCart.classList.remove("shrunk");
+  btnExpand.style.display = "none";
+  btnShrink.style.display = "inline-block";
+});
+
+</script>
+
+
+ <script>
+  const miniCart = document.getElementById("cart");
+
+  miniCart.onmousedown = function (e) {
+    e.preventDefault();
+    let shiftX = e.clientX - miniCart.getBoundingClientRect().left;
+    let shiftY = e.clientY - miniCart.getBoundingClientRect().top;
+
+    function moveAt(pageX, pageY) {
+      miniCart.style.left = pageX - shiftX + 'px';
+      miniCart.style.top = pageY - shiftY + 'px';
+      miniCart.style.bottom = 'auto';
+      miniCart.style.right = 'auto';
+    }
+
+    function onMouseMove(e) {
+      moveAt(e.pageX, e.pageY);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.onmouseup = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      miniCart.onmouseup = null;
+    };
+  };
+
+  miniCart.ondragstart = () => false;
+
+  document.getElementById("toggle-cart").addEventListener("click", () => {
+    miniCart.classList.toggle("shrunk");
+  });
+</script>
+
  <!--<button id="checkout-email">Order via Email</button>-->
 </div>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
